@@ -129,4 +129,41 @@ KPLIB_objectInits = [
         },
         true
     ]
+    	// custom code added by Storm below
+	// based on ColinM's radar fix
+	// Switch on AA radars
+	[
+		["B_Radar_System_01_F"],
+		{
+			_this setVehicleRadar 1;
+		}
+	],
+	
+	// Give sam sites infinite reloads
+	[
+		["B_SAM_System_03_F"],
+		{
+			_this setVehicleRadar 1;
+			_this addEventHandler ["Fired", { 
+				params ["_unit", "", "_muzzle", "", "", "_magazine"]; 
+				if (!local  _unit) exitWith {}; 
+ 
+				private _ammo = _unit ammo _muzzle; 
+ 
+				if (_ammo == 0) then {
+					_unit addMagazine _magazine; 
+				};
+			}];
+		}
+	],
+
+	// Lock all SAMS and radars
+	[
+		["B_Radar_System_01_F", "B_SAM_System_03_F"],
+		{
+			_this setVehicleLock "LOCKED";
+			_this lockDriver true;
+			_this lockTurret [[0],true]; true;
+		}
+	]
 ];
